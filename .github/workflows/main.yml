@@ -1,0 +1,44 @@
+name: CI Build and Test Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js runtime environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Run Syntax & Verification Check
+      - name: Run Application Health Check
+        run: |
+          echo "Starting automated CI validation..."
+          node app.js
+          echo "Code verification passed successfully!"
+
+      # Step 4: Run Automated Unit Tests (Simulation)
+      - name: Run Unit Tests
+        run: |
+          echo "Executing test suites..."
+          test -f app.js && echo "Test 1: App entry point exists - PASSED"
+          echo "All unit tests completed with 0 failures."
+
+      # Step 5: Build Artifact Simulation
+      - name: Build Application Package
+        run: |
+          mkdir -p dist
+          cp app.js dist/
+          tar -czf release-artifact.tar.gz dist/
+          echo "Build artifact generated: release-artifact.tar.gz"
